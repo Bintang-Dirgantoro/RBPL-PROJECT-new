@@ -20,3 +20,10 @@ Route::get('/logout', [AuthController::class,'logout']);
 Route::get('/inputkasir', [KasirController::class,'index']);
 Route::get('/verifadmin', [AdminController::class,'index']);
 Route::get('/dashboardowner', [OwnerController::class,'index']);
+
+// KASIR (Transaksi Penjualan) 
+Route::get('/kasir', [KasirController::class,'index']);
+Route::post('/kasir/tambah', [KasirController::class,'tambahBarang']);
+Route::post('/kasir/metode', [KasirController::class,'metode']);
+Route::post('/kasir/pin', [KasirController::class,'inputPin']);
+Route::get('/kasir/struk', [KasirController::class,'struk']);

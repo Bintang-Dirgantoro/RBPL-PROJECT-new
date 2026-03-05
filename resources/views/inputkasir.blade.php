@@ -1,14 +1,62 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h1>input kasir</h1>
-</body>
-</html>
+<h2>Input Barang</h2>
+
+<form action="/kasir/tambah" method="POST">
+@csrf
+
+Nama Barang
+<input name="barang">
+
+Qty
+<input name="qty">
+
+Harga
+<input name="harga">
+
+<button type="submit">Tambah Barang</button>
+
+</form>
+
+<hr>
 
 
+<h3>Keranjang</h3>
+
+@foreach($keranjang as $k)
+
+<p>
+
+{{ $k['barang'] }}
+
+|
+
+Qty : {{ $k['qty'] }}
+
+|
+
+Harga : {{ $k['harga'] }}
+
+|
+
+Subtotal : {{ $k['subtotal'] }}
+
+</p>
+
+@endforeach
+
+
+<hr>
+
+
+<form action="/kasir/metode" method="POST">
+
+@csrf
+
+<button name="metode" value="tunai">
+Bayar Tunai
+</button>
+
+<button name="metode" value="debit">
+Bayar Debit
+</button>
+
+</form>
