@@ -27,3 +27,4 @@ Route::post('/kasir/tambah', [KasirController::class,'tambahBarang']);
 Route::post('/kasir/metode', [KasirController::class,'metode']);
 Route::post('/kasir/pin', [KasirController::class,'inputPin']);
 Route::get('/kasir/struk', [KasirController::class,'struk']);
+Route::post('/kasir/hapus/{index}', [KasirController::class,'hapusBarang']);

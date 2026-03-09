@@ -3,14 +3,11 @@
 <form action="/kasir/tambah" method="POST">
 @csrf
 
-Nama Barang
-<input name="barang">
+Kode Barang
+<input name="idbarang">
 
 Qty
 <input name="qty">
-
-Harga
-<input name="harga">
 
 <button type="submit">Tambah Barang</button>
 
@@ -21,23 +18,18 @@ Harga
 
 <h3>Keranjang</h3>
 
-@foreach($keranjang as $k)
+@foreach($keranjang as $index => $k)
 
 <p>
-
-{{ $k['barang'] }}
-
-|
-
-Qty : {{ $k['qty'] }}
-
-|
-
-Harga : {{ $k['harga'] }}
-
-|
-
+{{ $k['barang'] }} |
+Qty : {{ $k['qty'] }} |
+Harga : {{ $k['harga'] }} |
 Subtotal : {{ $k['subtotal'] }}
+
+<form action="/kasir/hapus/{{ $index }}" method="POST" style="display:inline;">
+@csrf
+<button type="submit">Hapus</button>
+</form>
 
 </p>
 
