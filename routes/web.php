@@ -28,3 +28,6 @@ Route::post('/kasir/metode', [KasirController::class,'metode']);
 Route::post('/kasir/pin', [KasirController::class,'inputPin']);
 Route::get('/kasir/struk', [KasirController::class,'struk']);
 Route::post('/kasir/hapus/{index}', [KasirController::class,'hapusBarang']);
+Route::get('/kasir/metode', function () {
+    return redirect('/kasir');
+});
