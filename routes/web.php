@@ -31,4 +31,8 @@ Route::post('/kasir/hapus/{index}', [KasirController::class,'hapusBarang']);
 Route::get('/kasir/metode', function () {
     return redirect('/kasir');
 });
+
+
+
+//KASIR REKAP HARIAN
 Route::get('/kasir/rekap', [KasirController::class,'rekapHarian']);

@@ -1,7 +1,6 @@
 <h2>Rekap Omzet Harian</h2>
 
 <table border="1">
-
 <tr>
 <th>Tanggal</th>
 <th>Jumlah Transaksi</th>
@@ -19,3 +18,7 @@
 @endforeach
 
 </table>
+
+<br>
+
+<a href="/kasir">Kembali ke Kasir</a>

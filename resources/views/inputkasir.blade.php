@@ -1,3 +1,11 @@
+<h2>Input Kasir</h2>
+
+<a href="/kasir/rekap">
+<button>Lihat Rekap Harian</button>
+</a>
+
+<hr>
+
 <h2>Input Barang</h2>
 
 <form action="/kasir/tambah" method="POST">
@@ -12,7 +20,6 @@ Qty
 <button type="submit">Tambah Barang</button>
 
 </form>
-
 <hr>
 
 
