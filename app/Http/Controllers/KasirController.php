@@ -106,14 +106,53 @@ class KasirController extends Controller
     public function struk()
     {
         $keranjang = Session::get('keranjang', []);
+        $metode = Session::get('metode');
+
         $total = 0;
 
         foreach ($keranjang as $item) {
             $total += $item['subtotal'];
         }
 
+        // simpan transaksi
+        $idtransaksi = DB::table('transaksi')->insertGetId([
+            'waktu' => now(),
+            'metodepembayaran' => $metode,
+            'totalharga' => $total,
+        ]);
+
+        // simpan detail transaksi
+        foreach ($keranjang as $item) {
+
+            $barang = DB::table('barang')
+                ->where('nama', $item['barang'])
+                ->first();
+
+            DB::table('detailtransaksi')->insert([
+                'idtransaksi' => $idtransaksi,
+                'idbarang' => $barang->idbarang,
+                'qty' => $item['qty'],
+                'hargabeli_skrg' => $item['harga'],
+            ]);
+        }
+
         Session::forget('keranjang');
 
         return view('struk', compact('keranjang', 'total'));
+    }
+
+    public function rekapHarian()
+    {
+        $rekap = DB::table('transaksi')
+            ->select(
+                DB::raw('DATE(waktu) as tanggal'),
+                DB::raw('SUM(totalharga) as omzet'),
+                DB::raw('COUNT(idtransaksi) as jumlah_transaksi')
+            )
+            ->groupBy(DB::raw('DATE(waktu)'))
+            ->orderBy('tanggal', 'desc')
+            ->get();
+
+        return view('rekap', compact('rekap'));
     }
 }
