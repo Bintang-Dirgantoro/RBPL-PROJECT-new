@@ -143,16 +143,52 @@ class KasirController extends Controller
 
     public function rekapHarian()
     {
-        $rekap = DB::table('transaksi')
-            ->select(
-                DB::raw('DATE(waktu) as tanggal'),
-                DB::raw('SUM(totalharga) as omzet'),
-                DB::raw('COUNT(idtransaksi) as jumlah_transaksi')
-            )
-            ->groupBy(DB::raw('DATE(waktu)'))
-            ->orderBy('tanggal', 'desc')
+        $hariIni = now()->toDateString();
+
+        // Ambil detail transaksi untuk tabel (sesuai desain Figma)
+        $detailTransaksi = DB::table('transaksi')
+            ->whereDate('waktu', $hariIni)
             ->get();
 
-        return view('rekap', compact('rekap'));
+        // Hitung total untuk box visualisasi
+        $totalOmzet = $detailTransaksi->sum('totalharga');
+        $jumlahTransaksi = $detailTransaksi->count();
+
+        return view('rekap', compact('detailTransaksi', 'totalOmzet', 'jumlahTransaksi', 'hariIni'));
+    }
+
+    // Ambil detail barang untuk modal di halaman rekap
+    public function detailTransaksi($id)
+    {
+        $detail = DB::table('detailtransaksi')
+            ->join('barang', 'detailtransaksi.idbarang', '=', 'barang.idbarang')
+            ->where('detailtransaksi.idtransaksi', $id)
+            ->select('barang.nama', 'detailtransaksi.qty', 'detailtransaksi.hargabeli_skrg as harga')
+            ->get();
+
+        return response()->json($detail);
+    }
+
+    public function kirimLaporan(Request $request)
+    {
+        // Cek apakah sudah ada laporan di tabel laporan_harian [cite: 10]
+        $cek = DB::table('laporan_harian')
+            ->where('tanggal_laporan', $request->tanggal)
+            ->first();
+
+        if ($cek) {
+            return back()->with('error', 'Laporan hari ini sudah dikirim!');
+        }
+
+        // Insert dengan status pending [cite: 10]
+        DB::table('laporan_harian')->insert([
+            'tanggal_laporan' => $request->tanggal,
+            'total_omzet' => $request->omzet,
+            'total_transaksi' => $request->jumlah_transaksi,
+            'status' => 'pending',
+            'created_at' => now(),
+        ]);
+
+        return back()->with('success', 'Laporan berhasil dikirim.');
     }
 }

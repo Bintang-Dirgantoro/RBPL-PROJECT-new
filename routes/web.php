@@ -36,3 +36,9 @@ Route::get('/kasir/metode', function () {
 
 //KASIR REKAP HARIAN
 Route::get('/kasir/rekap', [KasirController::class,'rekapHarian']);
+
+// Sprint 4: Pengiriman Laporan
+Route::post('/kasir/kirim-laporan', [KasirController::class, 'kirimLaporan']);
+
+Route::get('/kasir/detail-transaksi/{id}', [KasirController::class, 'detailTransaksi']);
+Route::post('/kasir/kirim-laporan', [KasirController::class, 'kirimLaporan']);
