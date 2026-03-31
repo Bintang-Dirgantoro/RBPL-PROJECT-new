@@ -42,3 +42,8 @@ Route::post('/kasir/kirim-laporan', [KasirController::class, 'kirimLaporan']);
 
 Route::get('/kasir/detail-transaksi/{id}', [KasirController::class, 'detailTransaksi']);
 Route::post('/kasir/kirim-laporan', [KasirController::class, 'kirimLaporan']);
+
+// Sprint 5: Verifikasi Laporan
+Route::get('/verifadmin', [AdminController::class, 'index']);
+// Pastikan method-nya POST dan parameternya {id} sesuai dengan form di blade
+Route::post('/admin/verifikasi/{id}', [AdminController::class, 'verifikasi']);
