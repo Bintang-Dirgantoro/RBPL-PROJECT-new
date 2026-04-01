@@ -47,3 +47,7 @@ Route::post('/kasir/kirim-laporan', [KasirController::class, 'kirimLaporan']);
 Route::get('/verifadmin', [AdminController::class, 'index']);
 // Pastikan method-nya POST dan parameternya {id} sesuai dengan form di blade
 Route::post('/admin/verifikasi/{id}', [AdminController::class, 'verifikasi']);
+
+
+// Route untuk Dashboard Owner (Sprint 6: Konsolidasi Laporan)
+Route::get('/owner/dashboard', [OwnerController::class, 'index']);
