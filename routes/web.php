@@ -51,3 +51,6 @@ Route::post('/admin/verifikasi/{id}', [AdminController::class, 'verifikasi']);
 
 // Route untuk Dashboard Owner (Sprint 6: Konsolidasi Laporan)
 Route::get('/owner/dashboard', [OwnerController::class, 'index']);
+
+// Route Sprint 7 - Dashboard & Ekspor
+Route::get('/owner/export-excel', [OwnerController::class, 'exportExcel']);

@@ -37,5 +37,43 @@
             </tbody>
         </table>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="card" style="margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2>Grafik Omzet Bulanan</h2>
+        <a href="/owner/export-excel" style="padding: 10px; background: green; color: white; text-decoration: none; border-radius: 5px;">Ekspor Excel (CSV)</a>
+    </div>
+    <canvas id="omzetChart" width="400" height="150"></canvas>
+</div>
+
+<script>
+    const ctx = document.getElementById('omzetChart').getContext('2d');
+    const dataLaporan = @json($laporanKonsolidasi);
+    
+    const labels = dataLaporan.map(item => item.bulan + ' ' + item.tahun).reverse();
+    const omzet = dataLaporan.map(item => item.total_omzet).reverse();
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Total Omzet (Rp)',
+                data: omzet,
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                fill: true,
+                tension: 0.1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
 </body>
 </html>
