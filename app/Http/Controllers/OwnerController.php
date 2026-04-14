@@ -16,15 +16,16 @@ class OwnerController extends Controller
             return redirect('/login');
         }
 
-        // PBI-019 & PBI-020: Mengambil data omzet bulanan & tahunan
-        $laporanKonsolidasi = DB::table('transaksi')
+        // REVISI: Mengambil data HANYA yang sudah di-ACC oleh admin dari tabel laporan_harian
+        $laporanKonsolidasi = DB::table('laporan_harian')
             ->select(
-                DB::raw('YEAR(waktu) as tahun'),
-                DB::raw('MONTHNAME(waktu) as bulan'),
-                DB::raw('MONTH(waktu) as bulan_angka'),
-                DB::raw('SUM(totalharga) as total_omzet'),
-                DB::raw('COUNT(idtransaksi) as total_transaksi')
+                DB::raw('YEAR(tanggal_laporan) as tahun'),
+                DB::raw('MONTHNAME(tanggal_laporan) as bulan'),
+                DB::raw('MONTH(tanggal_laporan) as bulan_angka'),
+                DB::raw('SUM(total_omzet) as total_omzet'),
+                DB::raw('SUM(total_transaksi) as total_transaksi')
             )
+            ->where('status', 'ACC') // Kunci revisi nomor 1
             ->groupBy('tahun', 'bulan', 'bulan_angka')
             ->orderBy('tahun', 'desc')
             ->orderBy('bulan_angka', 'desc')
@@ -34,31 +35,32 @@ class OwnerController extends Controller
     }
 
     public function exportExcel()
-{
-    $laporan = DB::table('transaksi')
-        ->select(
-            DB::raw('YEAR(waktu) as tahun'),
-            DB::raw('MONTHNAME(waktu) as bulan'),
-            DB::raw('SUM(totalharga) as total_omzet'),
-            DB::raw('COUNT(idtransaksi) as total_transaksi')
-        )
-        ->groupBy('tahun', 'bulan')
-        ->get();
+    {
+        // REVISI: Export juga hanya data yang sudah divalidasi (ACC)
+        $laporan = DB::table('laporan_harian')
+            ->select(
+                DB::raw('YEAR(tanggal_laporan) as tahun'),
+                DB::raw('MONTHNAME(tanggal_laporan) as bulan'),
+                DB::raw('SUM(total_omzet) as total_omzet'),
+                DB::raw('SUM(total_transaksi) as total_transaksi')
+            )
+            ->where('status', 'ACC')
+            .groupBy('tahun', 'bulan')
+            ->get();
 
-    $response = new StreamedResponse(function() use ($laporan) {
-        $handle = fopen('php://output', 'w');
-        fputcsv($handle, ['Tahun', 'Bulan', 'Jumlah Transaksi', 'Total Omzet']);
+        $response = new StreamedResponse(function() use ($laporan) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['Tahun', 'Bulan', 'Jumlah Transaksi', 'Total Omzet']);
 
-        foreach ($laporan as $row) {
-            fputcsv($handle, [$row->tahun, $row->bulan, $row->total_transaksi, $row->total_omzet]);
-        }
-        fclose($handle);
-    });
+            foreach ($laporan as $row) {
+                fputcsv($handle, [$row->tahun, $row->bulan, $row->total_transaksi, $row->total_omzet]);
+            }
+            fclose($handle);
+        });
 
-    $response->headers->set('Content-Type', 'text/csv');
-    $response->headers->set('Content-Disposition', 'attachment; filename="Laporan_Omzet.csv"');
+        $response->headers->set('Content-Type', 'text/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="Laporan_Omzet_Valid.csv"');
 
-    return $response;
-}
-
+        return $response;
+    }
 }
