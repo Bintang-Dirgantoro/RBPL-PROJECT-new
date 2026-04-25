@@ -7,7 +7,7 @@
     <style>
         body { 
             font-family: 'Inter', sans-serif; 
-            background: #0f172a; 
+            background: #e2e5e8; 
             display: flex; 
             align-items: center; 
             justify-content: center; 

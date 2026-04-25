@@ -9,7 +9,7 @@
         :root {
             --primary: #2563eb;
             --primary-dark: #1e40af;
-            --bg: #f8fafc;
+            --bg: #e2e5e8;
             --text-main: #0f172a;
             --text-muted: #64748b;
             --surface: #ffffff;
